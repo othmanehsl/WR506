@@ -1,0 +1,113 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bibliothèque de Films{% endblock %}
+
+{% block body %}
+    <div class="movie-dashboard">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Bibliothèque de Films</h1>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ movies|length }}</span>
+                        <span class="stat-label">Films</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+                <div class="pagination" style="margin-bottom: 44px">
+            {% if currentPage > 1 %}
+                <a href="{{ path('app_movie', { page: currentPage - 1 }) }}" class="page-link prev">
+                    <i class="fas fa-chevron-left"></i> Précédent
+                </a>
+            {% endif %}
+
+            <div class="page-numbers">
+                {% for page in 1..totalPages %}
+                    <a href="{{ path('app_movie', { page: page }) }}" 
+                       class="page-link {{ page == currentPage ? 'active' : '' }}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            {% if currentPage < totalPages %}
+                <a href="{{ path('app_movie', { page: currentPage + 1 }) }}" class="page-link next">
+                    Suivant <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </div>
+
+        <div class="movies-grid">
+            {% for movie in movies %}
+                <article class="movie-card">
+                    <div class="movie-content">
+                        <h2 class="movie-title">{{ movie.title }}</h2>
+                        <div class="movie-meta">
+                            <span class="release-date">{{ movie.releaseDate ? movie.releaseDate|date('Y') : 'N/A' }}</span>
+                            <span class="duration">{{ movie.duration ? movie.duration ~ ' min' : 'N/A' }}</span>
+                            {% if movie.rating %}
+                                <span class="rating">
+                                    <i class="fas fa-star"></i>
+                                    {{ movie.rating|number_format(1) }}
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="categories-list">
+                            {% for category in movie.categories %}
+                                <span class="category-tag">{{ category.title }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="movie-description">
+                            {{ movie.description|slice(0, 150) ~ '...' }}
+                        </div>
+                        <div class="movie-director">
+                            <span class="label">Réalisateur:</span>
+                            <span class="value">{{ movie.director }}</span>
+                        </div>
+                        <div class="movie-cast">
+                            <span class="label">Casting:</span>
+                            <div class="actors-list">
+                                {% for actor in movie.actors|slice(0, 3) %}
+                                    <span class="actor">{{ actor.firstname ~ ' - ' ~ actor.lastname }}</span>
+                                {% endfor %}
+                                {% if movie.actors|length > 3 %}
+                                    <span class="actor-more">+{{ movie.actors|length - 3 }}</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            {% else %}
+                <div class="no-movies">
+                    <i class="fas fa-film"></i>
+                    <p>Aucun film disponible</p>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="pagination">
+            {% if currentPage > 1 %}
+                <a href="{{ path('app_movie', { page: currentPage - 1 }) }}" class="page-link prev">
+                    <i class="fas fa-chevron-left"></i> Précédent
+                </a>
+            {% endif %}
+
+            <div class="page-numbers">
+                {% for page in 1..totalPages %}
+                    <a href="{{ path('app_movie', { page: page }) }}" 
+                       class="page-link {{ page == currentPage ? 'active' : '' }}">
+                        {{ page }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            {% if currentPage < totalPages %}
+                <a href="{{ path('app_movie', { page: currentPage + 1 }) }}" class="page-link next">
+                    Suivant <i class="fas fa-chevron-right"></i>
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
