@@ -1,5 +1,5 @@
 <?php
-
+// src/Entity/Movie.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiFilter;
@@ -75,6 +75,7 @@ class Movie
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
