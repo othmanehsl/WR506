@@ -1,33 +1,46 @@
+# api/config/packages/security.yaml
 security:
-  # https://symfony.com/doc/current/security.html#c-hashing-passwords
-  password_hashers:
-    App\Entity\User: 'auto'
+    # https://symfony.com/doc/current/security.html#c-hashing-passwords
+    password_hashers:
+        App\Entity\User: 'auto'
+    # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
+    providers:
+        # used to reload user from session & other features (e.g. switch_user)
+        users:
+            entity:
+                class: App\Entity\User
+                property: email
 
-  # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
-  providers:
-    # used to reload user from session & other features (e.g. switch_user)
-    users:
-      entity:
-        class: App\Entity\User
-        property: email
+    firewalls:
+        dev:
+            pattern: ^/_(profiler|wdt)
+            security: false
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: users
+            jwt: ~
+        main:
+            json_login:
+                check_path: auth # The name in routes.yaml is enough for mapping
+                username_path: email
+                password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
 
-  firewalls:
-    dev:
-      pattern: ^/_(profiler|wdt)
-      security: false
-    main:
-      stateless: true
-      provider: users
-      json_login:
-        check_path: auth # The name in routes.yaml is enough for mapping
-        username_path: email
-        password_path: password
-        success_handler: lexik_jwt_authentication.handler.authentication_success
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure
-      jwt: ~
+    access_control:
+        - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
+        - { path: ^/api/docs, roles: PUBLIC_ACCESS } # Allows accessing API documentations and Swagger UI docs
+        - { path: ^/auth, roles: PUBLIC_ACCESS }
+        - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
 
-  access_control:
-    - { path: ^/$, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI
-    - { path: ^/docs, roles: PUBLIC_ACCESS } # Allows accessing the Swagger UI docs
-    - { path: ^/auth, roles: PUBLIC_ACCESS }
-    - { path: ^/, roles: IS_AUTHENTICATED_FULLY }
+# Configuration spécifique pour l'environnement de test
+when@test:
+    security:
+        password_hashers:
+            # Environnement de test avec hashers moins gourmands en ressources
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4  # Plus bas coût pour bcrypt
+                time_cost: 3  # Plus faible coût temporel pour argon
+                memory_cost: 10  # Plus faible coût en mémoire pour argon
