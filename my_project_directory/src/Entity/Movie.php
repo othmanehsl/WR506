@@ -1,5 +1,5 @@
 <?php
-
+// src/Entity/Movie.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiFilter;
@@ -76,6 +76,7 @@ class Movie
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
 
@@ -95,7 +96,6 @@ class Movie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    // La valeur par défaut de 'online' sera TRUE lors de la création
     #[ORM\Column(type: Types::BOOLEAN, options: ["default" => true])]
     private ?bool $online = true;  
 

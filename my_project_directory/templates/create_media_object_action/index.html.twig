@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <style>
+
+    </style>
+
+    <div class="example-wrapper">
+        <form action="{{ path('media_objects_create') }}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+{% endblock %}
