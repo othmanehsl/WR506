@@ -1,5 +1,5 @@
 <?php
-
+// src/Entity/Category.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;

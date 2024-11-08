@@ -1,5 +1,5 @@
 <?php
-
+// src/Entity/Actor.php
 namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
