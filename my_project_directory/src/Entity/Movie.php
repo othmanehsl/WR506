@@ -96,7 +96,6 @@ class Movie
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    // La valeur par défaut de 'online' sera TRUE lors de la création
     #[ORM\Column(type: Types::BOOLEAN, options: ["default" => true])]
     private ?bool $online = true;  
 
