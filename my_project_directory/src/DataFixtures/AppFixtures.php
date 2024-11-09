@@ -14,7 +14,7 @@ use App\Entity\Category;
 class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
-    { 
+    {
         $faker = \Faker\Factory::create();
         $faker->addProvider(new \Xylis\FakerCinema\Provider\Person($faker));
         $faker->addProvider(new \Xylis\FakerCinema\Provider\Movie($faker));
@@ -26,8 +26,8 @@ class AppFixtures extends Fixture
             $fullname = $item;
             $fullnameExploded = explode(' ', $fullname);
     
-            $firstname = $fullnameExploded[0]; 
-            $lastname = $fullnameExploded[1]; 
+            $firstname = $fullnameExploded[0];
+            $lastname = $fullnameExploded[1];
     
             $dob = $faker->dateTimeThisCentury();
             $actor = new Actor();
@@ -35,13 +35,13 @@ class AppFixtures extends Fixture
                   ->setFirstname($firstname)
                   ->setDob($dob)
                   ->setAwards($faker->numberBetween(0, 10))
-                  ->setBio($faker->text(200)) 
+                  ->setBio($faker->text(200))
                   ->setNationality($faker->country())
                   ->setMedia($faker->imageUrl(640, 480, 'actors', true))
                   ->setGender($faker->randomElement(['male', 'female', 'other']))
                   ->setCreatedAt(new DateTimeImmutable());
 
-            if ($faker->boolean(30)) { 
+            if ($faker->boolean(30)) {
                 $deathDate = $faker->dateTimeBetween($dob, 'now');
                 $actor->setDeathDate($deathDate);
             }
@@ -50,7 +50,7 @@ class AppFixtures extends Fixture
             $manager->persist($actor);
         }
     
-        $categories = []; 
+        $categories = [];
     
         $genres = $faker->movieGenres(21);
         foreach ($genres as $genreTitle) {

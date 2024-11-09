@@ -10,7 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use App\Repository\CategoryRepository;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
-#[ORM\HasLifecycleCallbacks]  
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource]
 class Category
 {
@@ -32,10 +32,10 @@ class Category
     #[ORM\ManyToMany(targetEntity: Movie::class, mappedBy: 'categories')]
     private Collection $movies;
 
-    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)] 
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)] 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     public function __construct()
@@ -46,13 +46,13 @@ class Category
     #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
-        $this->createdAt = new \DateTimeImmutable();  
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
-        $this->updatedAt = new \DateTime();  
+        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
