@@ -19,14 +19,14 @@ use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-#[ORM\HasLifecycleCallbacks]  
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: [
-    'title' => 'partial',     
-    'director' => 'exact',   
-    'categories.title' => 'partial',  
-    'actors.firstname' => 'partial', 
-    'actors.lastname' => 'partial'   
+    'title' => 'partial',
+    'director' => 'exact',
+    'categories.title' => 'partial',
+    'actors.firstname' => 'partial',
+    'actors.lastname' => 'partial'
 ])]
 #[ApiFilter(RangeFilter::class, properties: [
     'rating',
@@ -37,7 +37,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 ])]
 #[ApiFilter(BooleanFilter::class, properties: [
     'isDraft',
-    'online' 
+    'online'
 ])]
 #[ApiFilter(OrderFilter::class, properties: [
     'title',
@@ -62,15 +62,23 @@ class Movie
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull(message: "Le titre ne peut pas être null.")]
-    #[Assert\Length(min: 2, max: 255, minMessage: "Le titre doit comporter au moins 2 caractères.", maxMessage: "Le titre ne peut pas dépasser 255 caractères.")]    
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: "Le titre doit comporter au moins 2 caractères.",
+        maxMessage: "Le titre ne peut pas dépasser 255 caractères."
+    )]
     private ?string $title = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $releaseDate = null;
-
     #[ORM\Column(length: 255)]
     #[Assert\NotNull(message: "Le nom du directeur ne peut pas être null.")]
-    #[Assert\Length(min: 2, max: 100, minMessage: "Le nom du directeur doit comporter au moins 2 caractères.", maxMessage: "Le nom du directeur ne peut pas dépasser 100 caractères.")]    
+    #[Assert\Length(
+        min: 2,
+        max: 100,
+        minMessage: "Le nom du directeur doit comporter au moins 2 caractères.",
+        maxMessage: "Le nom du directeur ne peut pas dépasser 100 caractères."
+    )]
     private ?string $director = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -97,7 +105,7 @@ class Movie
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::BOOLEAN, options: ["default" => true])]
-    private ?bool $online = true;  
+    private ?bool $online = true;
 
     #[ORM\ManyToMany(targetEntity: Category::class, cascade: ['persist'])]
     private Collection $categories;
@@ -115,7 +123,7 @@ class Movie
     public function setCreatedAtValue(): void
     {
         if ($this->createdAt === null) {
-            $this->createdAt = new \DateTimeImmutable(); 
+            $this->createdAt = new \DateTimeImmutable();
         }
     }
 

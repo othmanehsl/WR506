@@ -13,8 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class MovieController extends AbstractController
 {
     #[Route('/movies', name: 'app_movie')]
-    public function index(Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
-    {
+    public function index(
+        Request $request,
+        PaginatorInterface $paginator,
+        EntityManagerInterface $entityManager
+    ): Response {
         $queryBuilder = $entityManager->getRepository(Movie::class)->createQueryBuilder('m')
             ->leftJoin('m.categories', 'c')
             ->addSelect('c')

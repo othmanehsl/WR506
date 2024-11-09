@@ -19,44 +19,40 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 #[ORM\Entity(repositoryClass: ActorRepository::class)]
-#[ORM\HasLifecycleCallbacks]  
+#[ORM\HasLifecycleCallbacks]
 #[ApiResource]
 #[ApiFilter(SearchFilter::class, properties: [
-    'lastname' => 'partial',     
-    'firstname' => 'partial',    
-    'nationality' => 'exact',   
-    'gender' => 'exact'         
+    'lastname' => 'partial',
+    'firstname' => 'partial',
+    'nationality' => 'exact',
+    'gender' => 'exact'
 ])]
 #[ApiFilter(RangeFilter::class, properties: [
-    'awards',                   
-    'dob',                
-    'deathDate'              
+    'awards',
+    'dob',
+    'deathDate'
 ])]
 #[ApiFilter(DateFilter::class, properties: [
-    'dob',                      
-    'createdAt',                
-    'deathDate'          
+    'dob',
+    'createdAt',
+    'deathDate'
 ])]
 #[ApiFilter(BooleanFilter::class, properties: [
-    'isRetired'             
+    'isRetired'
 ])]
 #[ApiFilter(OrderFilter::class, properties: [
-    'lastname',               
-    'dob',                 
-    'awards',                   
-    'deathDate'                
+    'lastname',
+    'dob',
+    'awards',
+    'deathDate'
 ], arguments: ['orderParameterName' => 'order'])]
 #[ApiFilter(ExistsFilter::class, properties: [
     'media',
-    'bio',                
-    'deathDate'             
+    'bio',
+    'deathDate'
 ])]
-#[ApiFilter(RangeFilter::class, properties: [
-    'awards'              
-])]
-#[ApiFilter(PropertyFilter::class)] 
+#[ApiFilter(PropertyFilter::class)]
 class Actor
 {
     #[ORM\Id]
@@ -66,11 +62,21 @@ class Actor
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull(message: "Le nom ne peut pas être nul.")]
-    #[Assert\Length(min: 2, max: 30, minMessage: "Le nom doit comporter au moins 2 caractères.", maxMessage: "Le nom ne peut pas dépasser 30 caractères.")]
+    #[Assert\Length(
+        min: 2,
+        max: 30,
+        minMessage: "Le nom doit comporter au moins 2 caractères.",
+        maxMessage: "Le nom ne peut pas dépasser 30 caractères."
+    )]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Length(min: 2, max: 30, minMessage: "Le prénom doit comporter au moins 2 caractères.", maxMessage: "Le prénom ne peut pas dépasser 30 caractères.")]
+    #[Assert\Length(
+        min: 2,
+        max: 30,
+        minMessage: "Le prénom doit comporter au moins 2 caractères.",
+        maxMessage: "Le prénom ne peut pas dépasser 30 caractères."
+    )]
     private ?string $firstname = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
@@ -86,9 +92,11 @@ class Actor
 
     #[ORM\Column(length: 255)]
     #[Assert\NotNull(message: "Le genre ne peut pas être nul.")]
-    #[Assert\Choice(choices: ['male', 'female', 'non-binary'], message: "Le genre doit être 'male', 'female' ou 'non-binary'.")]
+    #[Assert\Choice(
+        choices: ['male', 'female', 'non-binary'],
+        message: "Le genre doit être 'male', 'female' ou 'non-binary'."
+    )]
     private ?string $gender = null;
-
     #[ORM\Column(nullable: true)]
     #[Assert\Range(min: 0, max: 5, notInRangeMessage: "La notation doit être comprise entre 0 et 5.")]
     private ?int $awards = null;
@@ -143,7 +151,6 @@ class Actor
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
-
         return $this;
     }
 
@@ -155,7 +162,6 @@ class Actor
     public function setFirstname(?string $firstname): static
     {
         $this->firstname = $firstname;
-
         return $this;
     }
 
@@ -167,7 +173,6 @@ class Actor
     public function setDob(\DateTimeInterface $dob): static
     {
         $this->dob = $dob;
-
         return $this;
     }
 
@@ -179,7 +184,6 @@ class Actor
     public function setDeathDate(?\DateTimeInterface $deathDate): static
     {
         $this->deathDate = $deathDate;
-
         return $this;
     }
 
@@ -191,7 +195,6 @@ class Actor
     public function setAwards(?int $awards): static
     {
         $this->awards = $awards;
-
         return $this;
     }
 
@@ -203,7 +206,6 @@ class Actor
     public function setBio(?string $bio): static
     {
         $this->bio = $bio;
-
         return $this;
     }
 
@@ -215,7 +217,6 @@ class Actor
     public function setNationality(string $nationality): static
     {
         $this->nationality = $nationality;
-
         return $this;
     }
 
@@ -227,7 +228,6 @@ class Actor
     public function setMedia(?string $media): static
     {
         $this->media = $media;
-
         return $this;
     }
 
@@ -239,7 +239,6 @@ class Actor
     public function setGender(string $gender): static
     {
         $this->gender = $gender;
-
         return $this;
     }
 
@@ -251,7 +250,6 @@ class Actor
     public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
         $this->createdAt = $createdAt;
-
         return $this;
     }
 
@@ -263,7 +261,6 @@ class Actor
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 
@@ -281,7 +278,6 @@ class Actor
             $this->movies->add($movie);
             $movie->addActor($this);
         }
-
         return $this;
     }
 
@@ -290,7 +286,6 @@ class Actor
         if ($this->movies->removeElement($movie)) {
             $movie->removeActor($this);
         }
-
         return $this;
     }
 }

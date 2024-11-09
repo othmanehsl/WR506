@@ -14,8 +14,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends AbstractController
 {
     #[Route('/categories', name: 'app_category')]
-    public function index(Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): Response
-    {
+    public function index(
+        Request $request,
+        PaginatorInterface $paginator,
+        EntityManagerInterface $entityManager
+    ): Response {
         $queryBuilder = $entityManager->getRepository(Category::class)->createQueryBuilder('c')
             ->leftJoin('c.movies', 'm')
             ->addSelect('m')
@@ -35,8 +38,11 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/api/categories', name: 'api_categories_paginated', methods: ['GET'])]
-    public function getCategoriesPaginated(Request $request, PaginatorInterface $paginator, EntityManagerInterface $entityManager): JsonResponse
-    {
+    public function getCategoriesPaginated(
+        Request $request,
+        PaginatorInterface $paginator,
+        EntityManagerInterface $entityManager
+    ): JsonResponse {
         $queryBuilder = $entityManager->getRepository(Category::class)->createQueryBuilder('c');
 
         $pagination = $paginator->paginate(
