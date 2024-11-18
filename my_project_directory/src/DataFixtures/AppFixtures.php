@@ -4,9 +4,8 @@ namespace App\DataFixtures;
 
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
-use Faker;
+use Faker\Factory as FakerFactory;
 use DateTimeImmutable;
-use DateTime;
 use App\Entity\Actor;
 use App\Entity\Movie;
 use App\Entity\Category;
@@ -15,20 +14,22 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $faker = \Faker\Factory::create();
+        $faker = FakerFactory::create();
         $faker->addProvider(new \Xylis\FakerCinema\Provider\Person($faker));
         $faker->addProvider(new \Xylis\FakerCinema\Provider\Movie($faker));
     
-        $actors = $faker->actors(null, 190, false);
+        // Génération de 50 noms d'acteurs
+        $actors = [];
+        for ($i = 0; $i < 50; $i++) {
+            $actors[] = $faker->unique()->name();  // Utiliser name() pour les noms d'acteurs
+        }
+
         $createdActors = [];
-        
-        foreach ($actors as $item) {
-            $fullname = $item;
+        foreach ($actors as $fullname) {
             $fullnameExploded = explode(' ', $fullname);
-    
             $firstname = $fullnameExploded[0];
-            $lastname = $fullnameExploded[1];
-    
+            $lastname = $fullnameExploded[1] ?? '';
+
             $dob = $faker->dateTimeThisCentury();
             $actor = new Actor();
             $actor->setLastname($lastname)
@@ -50,22 +51,21 @@ class AppFixtures extends Fixture
             $manager->persist($actor);
         }
     
+        // Génération de 21 catégories (genres de films)
         $categories = [];
-    
-        $genres = $faker->movieGenres(21);
-        foreach ($genres as $genreTitle) {
+        for ($i = 0; $i < 21; $i++) {
             $category = new Category();
-            $category->setTitle($genreTitle)
+            $category->setTitle($faker->word())  // Utiliser word() pour les genres de films
                      ->setCreatedAt(new DateTimeImmutable());
             $manager->persist($category);
             $categories[] = $category;
         }
     
-        $movies = $faker->movies(100);
-        foreach ($movies as $item) {
+        // Génération de 100 films
+        for ($i = 0; $i < 100; $i++) {
             $movie = new Movie();
-            $movie->setTitle($item)
-                  ->setDescription($faker->overview(200))
+            $movie->setTitle($faker->sentence(3)) 
+                  ->setDescription($faker->text(200))
                   ->setReleaseDate($faker->dateTimeThisCentury())
                   ->setDuration($faker->numberBetween(1, 480))
                   ->setEntries($faker->numberBetween(0, 1000000))

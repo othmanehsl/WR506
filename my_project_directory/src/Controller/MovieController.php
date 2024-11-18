@@ -31,10 +31,12 @@ class MovieController extends AbstractController
             10
         );
 
+        $totalPages = ceil($pagination->getTotalItemCount() / $pagination->getItemNumberPerPage());
+
         return $this->render('movie/index.html.twig', [
             'movies' => $pagination->getItems(),
-            'currentPage' => $pagination->getPage(),
-            'totalPages' => $pagination->getPageCount(),
+            'currentPage' => $pagination->getCurrentPageNumber(),
+            'totalPages' => $totalPages,
         ]);
     }
 }

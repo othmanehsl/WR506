@@ -15,6 +15,7 @@ use ApiPlatform\Serializer\Filter\PropertyFilter;
 use App\Repository\ActorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use App\Entity\MediaObject;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -263,6 +264,20 @@ class Actor
         $this->updatedAt = $updatedAt;
         return $this;
     }
+
+    #[ORM\ManyToOne(targetEntity: MediaObject::class, inversedBy: 'actors')]
+private ?MediaObject $mediaObject = null;
+
+public function getMediaObject(): ?MediaObject
+{
+    return $this->mediaObject;
+}
+
+public function setMediaObject(?MediaObject $mediaObject): self
+{
+    $this->mediaObject = $mediaObject;
+    return $this;
+}
 
     /**
      * @return Collection<int, Movie>
