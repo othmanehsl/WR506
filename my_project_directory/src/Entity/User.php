@@ -42,31 +42,40 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'integer')]
     #[ORM\GeneratedValue]
     private ?int $id = null;
+
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Groups(['user:read', 'user:create', 'user:update'])]
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
+
     #[ORM\Column]
     private ?string $password = null;
+
     #[Assert\NotBlank(groups: ['user:create'])]
     #[Groups(['user:create', 'user:update'])]
     private ?string $plainPassword = null;
+
+    /** @var string[] */
     #[ORM\Column(type: 'json')]
     private array $roles = [];
+
     public function getId(): ?int
     {
         return $this->id;
     }
+
     public function getEmail(): ?string
     {
         return $this->email;
     }
+
     public function setEmail(string $email): self
     {
         $this->email = $email;
         return $this;
     }
+
     /**
      * @see PasswordAuthenticatedUserInterface
      */
@@ -74,21 +83,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return $this->password;
     }
+
     public function setPassword(string $password): self
     {
         $this->password = $password;
         return $this;
     }
+
     public function getPlainPassword(): ?string
     {
         return $this->plainPassword;
     }
+
     public function setPlainPassword(?string $plainPassword): self
     {
         $this->plainPassword = $plainPassword;
         return $this;
     }
+
     /**
+     * @return string[]
      * @see UserInterface
      */
     public function getRoles(): array
@@ -97,11 +111,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $roles[] = 'ROLE_USER';
         return array_unique($roles);
     }
+
+    /**
+     * @param string[] $roles
+     */
     public function setRoles(array $roles): self
     {
         $this->roles = $roles;
         return $this;
     }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -111,6 +130,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+
     /**
      * @see UserInterface
      */
