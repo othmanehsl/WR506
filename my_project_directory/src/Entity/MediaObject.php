@@ -65,12 +65,21 @@ class MediaObject
     #[Groups(['media_object:read'])]
     public ?string $filePath = null;
 
+    /**
+     * @var Collection<int, Movie>
+     */
     #[ORM\OneToMany(mappedBy: 'MediaObject', targetEntity: Movie::class)]
     private Collection $movies;
 
+    /**
+     * @var Collection<int, Actor>
+     */
     #[ORM\OneToMany(mappedBy: 'MediaObject', targetEntity: Actor::class)]
     private Collection $actors;
 
+    /**
+     * @var Collection<int, Category>
+     */
     #[ORM\OneToMany(mappedBy: 'MediaObject', targetEntity: Category::class)]
     private Collection $categories;
 
@@ -107,7 +116,6 @@ class MediaObject
     public function removeMovie(Movie $movie): static
     {
         if ($this->movies->removeElement($movie)) {
-            // set the owning side to null (unless already changed)
             if ($movie->getMediaObject() === $this) {
                 $movie->setMediaObject(null);
             }
@@ -137,7 +145,6 @@ class MediaObject
     public function removeActor(Actor $actor): static
     {
         if ($this->actors->removeElement($actor)) {
-            // set the owning side to null (unless already changed)
             if ($actor->getMediaObject() === $this) {
                 $actor->setMediaObject(null);
             }
@@ -145,27 +152,6 @@ class MediaObject
 
         return $this;
     }
-
-    public function getFile(): ?File
-    {
-        return $this->file;
-    }
-
-    public function setFile(?File $file = null): void
-    {
-        $this->file = $file;
-    }
-
-    public function getFilePath(): ?string
-    {
-        return $this->filePath;
-    }
-
-    public function setFilePath(?string $filePath): void
-    {
-        $this->filePath = $filePath;
-    }
-
 
     /**
      * @return Collection<int, Category>
@@ -188,12 +174,22 @@ class MediaObject
     public function removeCategory(Category $category): static
     {
         if ($this->categories->removeElement($category)) {
-            // set the owning side to null (unless already changed)
             if ($category->getMediaObject() === $this) {
                 $category->setMediaObject(null);
             }
         }
 
+        return $this;
+    }
+
+    public function getFile(): ?File
+    {
+        return $this->file;
+    }
+
+    public function setFile(File $file): self
+    {
+        $this->file = $file;
         return $this;
     }
 }

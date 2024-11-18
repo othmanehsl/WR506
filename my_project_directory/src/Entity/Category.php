@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\CategoryRepository;
+use App\Entity\MediaObject;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -29,6 +31,9 @@ class Category
     )]
     private ?string $title = null;
 
+    /**
+     * @var Collection<int, Movie>
+     */
     #[ORM\ManyToMany(targetEntity: Movie::class, mappedBy: 'categories')]
     private Collection $movies;
 
@@ -76,6 +81,12 @@ class Category
         return $this->createdAt;
     }
 
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
     public function getUpdatedAt(): ?\DateTimeInterface
     {
         return $this->updatedAt;
@@ -94,7 +105,6 @@ class Category
         if (!$this->movies->contains($movie)) {
             $this->movies->add($movie);
         }
-
         return $this;
     }
 
@@ -103,4 +113,18 @@ class Category
         $this->movies->removeElement($movie);
         return $this;
     }
+
+    #[ORM\ManyToOne(targetEntity: MediaObject::class, inversedBy: 'categories')]
+private ?MediaObject $mediaObject = null;
+
+public function getMediaObject(): ?MediaObject
+{
+    return $this->mediaObject;
+}
+
+public function setMediaObject(?MediaObject $mediaObject): self
+{
+    $this->mediaObject = $mediaObject;
+    return $this;
+}
 }

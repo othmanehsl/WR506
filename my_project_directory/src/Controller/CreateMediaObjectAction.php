@@ -27,7 +27,6 @@ final class CreateMediaObjectAction extends AbstractController
         $mediaObject = new MediaObject();
         $mediaObject->setFile($uploadedFile);
 
-        // Persist the entity and flush to save to the database
         $this->entityManager->persist($mediaObject);
         $this->entityManager->flush();
 

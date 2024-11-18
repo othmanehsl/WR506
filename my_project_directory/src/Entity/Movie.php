@@ -15,6 +15,7 @@ use ApiPlatform\Doctrine\Orm\Filter\OrderFilter;
 use ApiPlatform\Doctrine\Orm\Filter\ExistsFilter;
 use ApiPlatform\Doctrine\Orm\Filter\NumericFilter;
 use ApiPlatform\Serializer\Filter\PropertyFilter;
+use App\Entity\MediaObject;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -69,8 +70,10 @@ class Movie
         maxMessage: "Le titre ne peut pas dépasser 255 caractères."
     )]
     private ?string $title = null;
+
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $releaseDate = null;
+
     #[ORM\Column(length: 255)]
     #[Assert\NotNull(message: "Le nom du directeur ne peut pas être null.")]
     #[Assert\Length(
@@ -83,7 +86,6 @@ class Movie
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $media = null;
@@ -107,9 +109,15 @@ class Movie
     #[ORM\Column(type: Types::BOOLEAN, options: ["default" => true])]
     private ?bool $online = true;
 
+    /**
+     * @var Collection<int, Category>
+     */
     #[ORM\ManyToMany(targetEntity: Category::class, cascade: ['persist'])]
     private Collection $categories;
 
+    /**
+     * @var Collection<int, Actor>
+     */
     #[ORM\ManyToMany(targetEntity: Actor::class, cascade: ['persist'])]
     private Collection $actors;
 
@@ -143,7 +151,6 @@ class Movie
         $this->online = $online;
         return $this;
     }
-
 
     public function getId(): ?int
     {
@@ -238,6 +245,23 @@ class Movie
         return $this;
     }
 
+    #[ORM\ManyToOne(targetEntity: MediaObject::class, inversedBy: 'movies')]
+private ?MediaObject $mediaObject = null;
+
+public function getMediaObject(): ?MediaObject
+{
+    return $this->mediaObject;
+}
+
+public function setMediaObject(?MediaObject $mediaObject): self
+{
+    $this->mediaObject = $mediaObject;
+    return $this;
+}
+
+    /**
+     * @return Collection<int, Category>
+     */
     public function getCategories(): Collection
     {
         return $this->categories;
@@ -257,6 +281,9 @@ class Movie
         return $this;
     }
 
+    /**
+     * @return Collection<int, Actor>
+     */
     public function getActors(): Collection
     {
         return $this->actors;
@@ -292,7 +319,6 @@ class Movie
         return $this->updatedAt;
     }
     
-
     public function setUpdatedAt(?\DateTimeInterface $updatedAt): static
     {
         $this->updatedAt = $updatedAt;
