@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use App\Repository\CategoryRepository;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 #[ORM\HasLifecycleCallbacks]  
@@ -30,6 +31,7 @@ class Category
     private ?string $title = null;
 
     #[ORM\ManyToMany(targetEntity: Movie::class, mappedBy: 'categories')]
+    #[Assert\Valid]
     private Collection $movies;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE)] 
@@ -41,6 +43,7 @@ class Category
     public function __construct()
     {
         $this->movies = new ArrayCollection();
+        $this->createdAt = new \DateTimeImmutable(); 
     }
 
     #[ORM\PrePersist]
@@ -65,7 +68,7 @@ class Category
         return $this->title;
     }
 
-    public function setTitle(string $title): static
+    public function setTitle(string $title): self
     {
         $this->title = $title;
         return $this;
@@ -89,18 +92,22 @@ class Category
         return $this->movies;
     }
 
-    public function addMovie(Movie $movie): static
+    public function addMovie(Movie $movie): self
     {
         if (!$this->movies->contains($movie)) {
             $this->movies->add($movie);
+            $movie->addCategory($this); 
         }
 
         return $this;
     }
 
-    public function removeMovie(Movie $movie): static
+    public function removeMovie(Movie $movie): self
     {
-        $this->movies->removeElement($movie);
+        if ($this->movies->removeElement($movie)) {
+            $movie->removeCategory($this); 
+        }
+
         return $this;
     }
 }
